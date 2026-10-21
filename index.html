@@ -23,14 +23,17 @@
         <span class="brand-sub">Florida Atlantic University &middot; Boca Raton, FL</span>
       </div>
     </div>
-    <div class="topbar-actions" id="appTopbarActions" hidden>
-      <span id="userEmail" class="user-email"></span>
-      <button id="exportBtn" class="btn btn-ghost" title="Download all entries as a JSON backup">Export</button>
-      <label class="btn btn-ghost" title="Restore entries from a JSON backup">
-        Import
-        <input type="file" id="importInput" accept="application/json" hidden />
-      </label>
-      <button id="logoutBtn" class="btn btn-ghost">Log out</button>
+    <div class="topbar-right">
+      <button id="themeToggleBtn" class="btn btn-ghost theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+      <div class="topbar-actions" id="appTopbarActions" hidden>
+        <span id="userEmail" class="user-email"></span>
+        <button id="exportBtn" class="btn btn-ghost" title="Download all entries as a JSON backup">Export</button>
+        <label class="btn btn-ghost" title="Restore entries from a JSON backup">
+          Import
+          <input type="file" id="importInput" accept="application/json" hidden />
+        </label>
+        <button id="logoutBtn" class="btn btn-ghost">Log out</button>
+      </div>
     </div>
   </header>
 
@@ -97,6 +100,14 @@
           <input type="text" id="tags" placeholder="e.g. campus, study-group, boca" />
         </div>
 
+        <div class="field">
+          <label for="location">Location <span class="hint">(optional)</span></label>
+          <div class="location-row">
+            <input type="text" id="location" placeholder="e.g. FAU Library, Boca Raton" maxlength="120" />
+            <button type="button" id="useLocationBtn" class="btn btn-ghost btn-small" title="Use my current location">📍 Use my location</button>
+          </div>
+        </div>
+
         <div class="composer-actions">
           <button type="submit" class="btn btn-primary" id="saveBtn">Save entry</button>
           <button type="button" class="btn btn-text" id="cancelEditBtn" hidden>Cancel edit</button>
@@ -138,6 +149,7 @@
           <h3 class="entry-title"></h3>
           <span class="entry-date"></span>
           <span class="entry-mood"></span>
+          <span class="entry-location"></span>
         </div>
         <div class="entry-card-actions">
           <button class="icon-btn edit-btn" title="Edit">✏️</button>
