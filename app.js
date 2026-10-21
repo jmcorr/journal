@@ -45,6 +45,10 @@
   const exportBtn = document.getElementById('exportBtn');
   const importInput = document.getElementById('importInput');
 
+  const locationInput = document.getElementById('location');
+  const useLocationBtn = document.getElementById('useLocationBtn');
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+
   let isSignupMode = false;
   /** @type {Entry[]} */
   let entries = [];
@@ -70,10 +74,86 @@
       date: row.entry_date,
       mood: row.mood || '',
       tags: row.tags || [],
+      location: row.location || '',
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     };
   }
+
+  // ---------- Theme ----------
+
+  const THEME_KEY = 'fau-owls-journal:theme';
+
+  function applyTheme(theme) {
+    if (theme === 'dark' || theme === 'light') {
+      document.documentElement.dataset.theme = theme;
+    } else {
+      delete document.documentElement.dataset.theme;
+    }
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = theme === 'dark' || (theme !== 'light' && prefersDark);
+    themeToggleBtn.textContent = isDark ? '☀️' : '🌙';
+  }
+
+  themeToggleBtn.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme;
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentlyDark = current === 'dark' || (!current && prefersDark);
+    const next = currentlyDark ? 'light' : 'dark';
+    try {
+      localStorage.setItem(THEME_KEY, next);
+    } catch {
+      // ignore storage failures (private browsing, etc.)
+    }
+    applyTheme(next);
+  });
+
+  (() => {
+    let saved = null;
+    try {
+      saved = localStorage.getItem(THEME_KEY);
+    } catch {
+      saved = null;
+    }
+    applyTheme(saved);
+  })();
+
+  // ---------- Geolocation ----------
+
+  useLocationBtn.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      alert('Your browser does not support location lookup.');
+      return;
+    }
+    useLocationBtn.disabled = true;
+    useLocationBtn.textContent = '📍 Locating...';
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=14`
+          );
+          const data = await res.json();
+          const addr = data.address || {};
+          const label =
+            addr.suburb || addr.neighbourhood || addr.city || addr.town || addr.village || data.display_name || '';
+          locationInput.value = label || `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+        } catch {
+          alert('Could not look up your location name. Please type it manually.');
+        } finally {
+          useLocationBtn.disabled = false;
+          useLocationBtn.textContent = '📍 Use my location';
+        }
+      },
+      () => {
+        alert('Could not get your location. Please allow location access, or type it manually.');
+        useLocationBtn.disabled = false;
+        useLocationBtn.textContent = '📍 Use my location';
+      },
+      { timeout: 10000 }
+    );
+  });
 
   // ---------- Auth ----------
 
@@ -191,6 +271,7 @@
       entry_date: typeof item.date === 'string' ? item.date : todayISO(),
       mood: typeof item.mood === 'string' ? item.mood : '',
       tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
+      location: typeof item.location === 'string' ? item.location : null,
     }));
 
     const { error } = await supabaseClient.from(TABLE).insert(rows);
@@ -219,6 +300,7 @@
     moodInput.value = entry.mood || '';
     contentInput.value = entry.content;
     tagsInput.value = (entry.tags || []).join(', ');
+    locationInput.value = entry.location || '';
     cancelEditBtn.hidden = false;
     saveBtn.textContent = 'Update entry';
     titleInput.focus();
@@ -256,6 +338,13 @@
         moodEl.remove();
       }
       node.querySelector('.entry-content').textContent = entry.content;
+
+      const locationEl = node.querySelector('.entry-location');
+      if (entry.location) {
+        locationEl.textContent = entry.location;
+      } else {
+        locationEl.remove();
+      }
 
       const tagsWrap = node.querySelector('.entry-tags');
       for (const tag of entry.tags || []) {
@@ -298,6 +387,7 @@
       entry_date: dateInput.value,
       mood: moodInput.value,
       tags,
+      location: locationInput.value.trim() || null,
     };
 
     saveBtn.disabled = true;
@@ -353,6 +443,7 @@
           entry_date: typeof item.date === 'string' ? item.date : todayISO(),
           mood: typeof item.mood === 'string' ? item.mood : '',
           tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
+          location: typeof item.location === 'string' ? item.location : null,
         }));
 
       if (rows.length === 0) throw new Error('No entries found in that file');
