@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" role="img" aria-labelledby="fauLogoTitle">
+  <title id="fauLogoTitle">FAU Owl Emblem</title>
+  <circle cx="80" cy="80" r="78" fill="#002855" stroke="#BA0C2F" stroke-width="4"/>
+  <circle cx="80" cy="80" r="68" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.5"/>
+
+  <g transform="translate(80,86)">
+    <!-- Owl body -->
+    <ellipse cx="0" cy="8" rx="30" ry="34" fill="#FFFFFF"/>
+    <!-- Wings -->
+    <path d="M -28 0 C -40 14 -40 32 -26 40 C -30 26 -28 10 -18 0 Z" fill="#BA0C2F"/>
+    <path d="M 28 0 C 40 14 40 32 26 40 C 30 26 28 10 18 0 Z" fill="#BA0C2F"/>
+    <!-- Head -->
+    <circle cx="0" cy="-18" r="26" fill="#FFFFFF"/>
+    <!-- Ear tufts -->
+    <path d="M -18 -36 L -10 -20 L -24 -24 Z" fill="#FFFFFF"/>
+    <path d="M 18 -36 L 10 -20 L 24 -24 Z" fill="#FFFFFF"/>
+    <!-- Eyes -->
+    <circle cx="-11" cy="-18" r="10" fill="#002855"/>
+    <circle cx="11" cy="-18" r="10" fill="#002855"/>
+    <circle cx="-11" cy="-18" r="4.2" fill="#FFFFFF"/>
+    <circle cx="11" cy="-18" r="4.2" fill="#FFFFFF"/>
+    <!-- Beak -->
+    <path d="M -5 -8 L 5 -8 L 0 -1 Z" fill="#BA0C2F"/>
+    <!-- Feet -->
+    <path d="M -10 40 L -14 50 M -10 40 L -8 51 M -10 40 L -4 49" stroke="#BA0C2F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M 10 40 L 14 50 M 10 40 L 8 51 M 10 40 L 4 49" stroke="#BA0C2F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <path id="fauArcTop" d="M 22 80 A 58 58 0 0 1 138 80" fill="none"/>
+  <text font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="20" fill="#FFFFFF" letter-spacing="3">
+    <textPath href="#fauArcTop" startOffset="50%" text-anchor="middle">FAU</textPath>
+  </text>
+</svg>

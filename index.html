@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAU Owls Journal</title>
+  <meta name="description" content="A private, offline-first journal for FAU Owls in Boca Raton. No account, no API keys, no servers — everything stays on your device." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Georgia&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-wave" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <img src="assets/fau-owl-logo.svg" alt="FAU owl emblem" class="brand-logo" />
+      <div class="brand-text">
+        <span class="brand-title">Owls Journal</span>
+        <span class="brand-sub">Florida Atlantic University &middot; Boca Raton, FL</span>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button id="exportBtn" class="btn btn-ghost" title="Download all entries as a JSON backup">Export</button>
+      <label class="btn btn-ghost" title="Restore entries from a JSON backup">
+        Import
+        <input type="file" id="importInput" accept="application/json" hidden />
+      </label>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="composer card">
+      <h2 class="section-title">New entry</h2>
+      <form id="entryForm">
+        <input type="hidden" id="entryId" />
+        <div class="field">
+          <label for="title">Title</label>
+          <input type="text" id="title" placeholder="A headline for today" maxlength="120" required />
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="entryDate">Date</label>
+            <input type="date" id="entryDate" required />
+          </div>
+          <div class="field">
+            <label for="mood">Mood</label>
+            <select id="mood">
+              <option value="">No mood</option>
+              <option value="🦉 Great">🦉 Great</option>
+              <option value="🙂 Good">🙂 Good</option>
+              <option value="😐 Okay">😐 Okay</option>
+              <option value="😕 Rough">😕 Rough</option>
+              <option value="😫 Stressed">😫 Stressed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="content">What's on your mind?</label>
+          <textarea id="content" rows="8" placeholder="Write about your day at FAU — classes, Boca life, Owls games, anything." required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="tags">Tags <span class="hint">(comma separated)</span></label>
+          <input type="text" id="tags" placeholder="e.g. campus, study-group, boca" />
+        </div>
+
+        <div class="composer-actions">
+          <button type="submit" class="btn btn-primary" id="saveBtn">Save entry</button>
+          <button type="button" class="btn btn-text" id="cancelEditBtn" hidden>Cancel edit</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="entries">
+      <div class="entries-toolbar card">
+        <input type="search" id="searchInput" placeholder="Search your entries..." aria-label="Search entries" />
+        <select id="moodFilter" aria-label="Filter by mood">
+          <option value="">All moods</option>
+          <option value="🦉 Great">🦉 Great</option>
+          <option value="🙂 Good">🙂 Good</option>
+          <option value="😐 Okay">😐 Okay</option>
+          <option value="😕 Rough">😕 Rough</option>
+          <option value="😫 Stressed">😫 Stressed</option>
+        </select>
+        <span id="entryCount" class="entry-count">0 entries</span>
+      </div>
+
+      <ul id="entryList" class="entry-list"></ul>
+
+      <div id="emptyState" class="empty-state card">
+        <img src="assets/fau-owl-logo.svg" alt="" class="empty-logo" />
+        <p>No entries yet. Owlsley is waiting for your first story &mdash; write one above.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Go Owls! Everything you write is stored only in this browser (localStorage) &mdash; no account, no server, no API keys.</p>
+  </footer>
+
+  <template id="entryTemplate">
+    <li class="entry-card card">
+      <div class="entry-card-header">
+        <div>
+          <h3 class="entry-title"></h3>
+          <span class="entry-date"></span>
+          <span class="entry-mood"></span>
+        </div>
+        <div class="entry-card-actions">
+          <button class="icon-btn edit-btn" title="Edit">✏️</button>
+          <button class="icon-btn delete-btn" title="Delete">🗑️</button>
+        </div>
+      </div>
+      <p class="entry-content"></p>
+      <div class="entry-tags"></div>
+    </li>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
